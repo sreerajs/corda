@@ -247,7 +247,7 @@ class GenericsTests {
         // Uncomment to re-generate test files, needs to be done in three stages
         // File(URI("$localPath/$resource")).writeBytes(forceWildcardSerialize(ForceWildcard("wibble")).bytes)
 
-        assertEquals ("wibble",
+        assertEquals("wibble",
                 DeserializationInput(sf).deserialize(SerializedBytes<ForceWildcard<*>>(
                         File(GenericsTests::class.java.getResource(resource).toURI()).readBytes())).t)
     }
