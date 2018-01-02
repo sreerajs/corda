@@ -346,7 +346,7 @@ private fun Hasher.fingerprintWithCustomSerializerOrElse(factory: SerializerFact
     }
 }
 
-// This method concatentates various elements of the types recursively as unencoded strings into the hasher, effectively
+// This method concatenates various elements of the types recursively as unencoded strings into the hasher, effectively
 // creating a unique string for a type which we then hash in the calling function above.
 private fun fingerprintForType(type: Type, contextType: Type?, alreadySeen: MutableSet<Type>,
                                hasher: Hasher, factory: SerializerFactory, offset: String = ""): Hasher {
@@ -381,9 +381,9 @@ private fun fingerprintForType(type: Type, contextType: Type?, alreadySeen: Muta
             // Treat generic types as "any type" to prevent fingerprint mismatch. This case we fall into when
             // looking at A and B from Example<A, B> (remember we call this function recursively). When
             // serialising a concrete example of the type we have A and B which are TypeVariables<*>'s but
-            // when deserializing we only have the wilcard placeholder ?, or AnyType
+            // when deserializing we only have the wildcard placeholder ?, or AnyType
             //
-            // Note, TypeVariable<*> used to be encided as TYPE_VARIABLE_HASH but that again produces a
+            // Note, TypeVariable<*> used to be encoded as TYPE_VARIABLE_HASH but that again produces a
             // differing fingerprint on serialisation and deserialization
                 is SerializerFactory.AnyType,
                 is TypeVariable<*> -> {
@@ -419,7 +419,10 @@ private fun fingerprintForType(type: Type, contextType: Type?, alreadySeen: Muta
                 is GenericArrayType -> fingerprintForType(type.genericComponentType, contextType, alreadySeen,
                         hasher, factory, "$offset  ").putUnencodedChars(ARRAY_HASH)
             // TODO: include bounds
-                is WildcardType -> hasher.putUnencodedChars(type.typeName).putUnencodedChars(WILDCARD_TYPE_HASH)
+                is WildcardType -> {
+                    println ("wildcard")
+                    hasher.putUnencodedChars(type.typeName).putUnencodedChars(WILDCARD_TYPE_HASH)
+                }
                 else -> throw NotSerializableException("Don't know how to hash")
             }
         } catch (e: NotSerializableException) {
