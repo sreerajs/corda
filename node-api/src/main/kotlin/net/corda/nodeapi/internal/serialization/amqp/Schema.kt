@@ -350,6 +350,8 @@ private fun Hasher.fingerprintWithCustomSerializerOrElse(factory: SerializerFact
 // creating a unique string for a type which we then hash in the calling function above.
 private fun fingerprintForType(type: Type, contextType: Type?, alreadySeen: MutableSet<Type>,
                                hasher: Hasher, factory: SerializerFactory, offset: String = ""): Hasher {
+
+    println (type.)
     // We don't include Example<?> and Example<T> where type is ? or T in this otherwise we
     // generate different fingerprints for class Outer<T>(val a: Inner<T>) when serialising
     // and deserializing (assuming deserialization is occurring in a factory that didn't
@@ -373,7 +375,7 @@ private fun fingerprintForType(type: Type, contextType: Type?, alreadySeen: Muta
                         }
                     }
 
-                    // ... and concatentate the type data for each parameter type.
+                    // ... and concatenate the type data for each parameter type.
                     type.actualTypeArguments.fold(startingHash) { orig, paramType ->
                         fingerprintForType(paramType, type, alreadySeen, orig, factory, "$offset    ")
                     }
@@ -381,9 +383,9 @@ private fun fingerprintForType(type: Type, contextType: Type?, alreadySeen: Muta
             // Treat generic types as "any type" to prevent fingerprint mismatch. This case we fall into when
             // looking at A and B from Example<A, B> (remember we call this function recursively). When
             // serialising a concrete example of the type we have A and B which are TypeVariables<*>'s but
-            // when deserializing we only have the wilcard placeholder ?, or AnyType
+            // when deserializing we only have the wildcard placeholder ?, or AnyType
             //
-            // Note, TypeVariable<*> used to be encided as TYPE_VARIABLE_HASH but that again produces a
+            // Note, TypeVariable<*> used to be encoded as TYPE_VARIABLE_HASH but that again produces a
             // differing fingerprint on serialisation and deserialization
                 is SerializerFactory.AnyType,
                 is TypeVariable<*> -> {

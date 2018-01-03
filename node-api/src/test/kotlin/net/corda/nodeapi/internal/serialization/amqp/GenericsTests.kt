@@ -168,4 +168,30 @@ class GenericsTests {
             }
         }
     }
+
+    interface DifferentBounds {
+        fun go()
+    }
+
+    @Test
+    fun differentBounds() {
+        data class A (val a: Int): DifferentBounds {
+           override fun go() {
+               println(a)
+           }
+        }
+
+        data class G<out T : DifferentBounds>(val b: T)
+
+        val factorys = listOf(
+                SerializerFactory(AllWhitelist, ClassLoader.getSystemClassLoader()),
+                SerializerFactory(AllWhitelist, ClassLoader.getSystemClassLoader()))
+
+        val ser = SerializationOutput(factorys[0])
+
+        ser.serialize(G(A(10))).apply {
+            factorys.forEach {
+            }
+        }
+    }
 }

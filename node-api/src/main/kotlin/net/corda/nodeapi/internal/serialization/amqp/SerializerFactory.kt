@@ -331,7 +331,7 @@ open class SerializerFactory(
 
         private val namesOfPrimitiveTypes: Map<String, Class<*>> = primitiveTypeNames.map { it.value to it.key }.toMap()
 
-        fun nameForType(type: Type): String =  when (type) {
+        fun nameForType(type: Type): String = when (type) {
             is Class<*> -> {
                 primitiveTypeName(type) ?: if (type.isArray) {
                     "${nameForType(type.componentType)}${if (type.componentType.isPrimitive) "[p]" else "[]"}"
